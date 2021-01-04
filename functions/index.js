@@ -11,12 +11,23 @@ exports.sendNotificationToAll = functions.firestore
         
         const data = snap.data();
 
-        var payload = {
+        const payload = {
             notification : {
                 title : `New Post from ${data.creator}`,
                 body : data.post,
-                click_action: 'FLUTTER_NOTIFICATION_CLICK',
-                sound : 'default'
+            },
+            android: {
+                notification: {
+                  sound: 'default',
+                  click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                },
+              },
+            apns: {
+                payload: {
+                  aps: {
+                    sound: 'default'
+                  },
+                },
             },
             topic : 'feed',
            
