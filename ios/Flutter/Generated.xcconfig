@@ -1,7 +1,7 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=/Users/emmanuelogbewe/flutter
-FLUTTER_APPLICATION_PATH=/Users/emmanuelogbewe/Documents/Coding_Courses/udemy/push_notifications_firebase
-FLUTTER_TARGET=/Users/emmanuelogbewe/Documents/Coding_Courses/udemy/push_notifications_firebase/lib/main.dart
+FLUTTER_APPLICATION_PATH=/Users/emmanuelogbewe/coding_courses/udemy/push_notifications_firebase
+FLUTTER_TARGET=/Users/emmanuelogbewe/coding_courses/udemy/push_notifications_firebase/lib/main.dart
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build/ios
 OTHER_LDFLAGS=$(inherited) -framework Flutter

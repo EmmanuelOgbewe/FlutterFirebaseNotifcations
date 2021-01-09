@@ -1,8 +1,8 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/emmanuelogbewe/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/emmanuelogbewe/Documents/Coding_Courses/udemy/push_notifications_firebase"
-export "FLUTTER_TARGET=/Users/emmanuelogbewe/Documents/Coding_Courses/udemy/push_notifications_firebase/lib/main.dart"
+export "FLUTTER_APPLICATION_PATH=/Users/emmanuelogbewe/coding_courses/udemy/push_notifications_firebase"
+export "FLUTTER_TARGET=/Users/emmanuelogbewe/coding_courses/udemy/push_notifications_firebase/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "OTHER_LDFLAGS=$(inherited) -framework Flutter"

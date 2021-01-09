@@ -5,27 +5,31 @@ import 'db_service.dart';
 class AuthService {
 
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  PostService dbService = PostService();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  PostService _dbService = PostService();
 
-  Future<void> createUser(String email, String password, String username) async {
+  Future<void> createUser(String email, String password, String username, String photoUrl) async {
 
     try{
-      UserCredential credential =  await auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential credential =  await _auth.createUserWithEmailAndPassword(email: email, password: password);
       assert(credential.user.uid != "");
-      await dbService.addUserInfo(credential.user.uid, username);
+      
+      await credential.user.updateProfile(displayName: username, photoURL: photoUrl);
+      await _dbService.addUserInfo(credential.user.uid, username);
 
     } on FirebaseException catch( e) {
-      print(e);
+      throw(e);
+     
     } catch (err) {
-      print(err);
+      throw(err);
+     
     }
     
   }
   
   Future<void> loginUser(String email, String password) async{
     try{
-      UserCredential credential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       print("user is logged in " + credential.user.uid);
     } on FirebaseAuthException catch(err){
       print(err);

@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:push_notifications_firebase/services/db_service.dart';
+
 
 class PostCard extends StatefulWidget {
   final post;
   final username;
   final id;
+  final profileImg;
   final liked;
 
    PostCard({
@@ -12,6 +15,7 @@ class PostCard extends StatefulWidget {
     this.post,
     this.id,
     this.username,
+    this.profileImg,
     this.liked = false
   }) : super(key: key) ;
 
@@ -21,8 +25,9 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   final postService = PostService();
-  bool isLiked;
+  final currentUserID = FirebaseAuth.instance.currentUser.uid;
 
+  bool isLiked;
 
   @override
   void initState() {
@@ -35,21 +40,15 @@ class _PostCardState extends State<PostCard> {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
-          "https://cdn.now.howstuffworks.com/media-content/0b7f4e9b-f59c-4024-9f06-b3dc12850ab7-1920-1080.jpg"
-        ),
-      ),
+          widget.profileImg
+        ) ,
+      ) ,
       title: Text.rich(
         TextSpan(children: [
           TextSpan(
             text : widget.username + " ",
             style: TextStyle(
               
-            )
-          ),
-          TextSpan(
-            text : 'now',
-            style: TextStyle(
-              color: Colors.grey.shade700
             )
           ),
 
@@ -64,9 +63,9 @@ class _PostCardState extends State<PostCard> {
             isLiked = !isLiked;
           });
           if(isLiked){
-            postService.likePost("robot64", widget.id);
+            postService.likePost(currentUserID, widget.id);
           } else {
-             postService.unlikePost("robot64", widget.id);
+            postService.unlikePost(currentUserID, widget.id);
           }
         },
       ),

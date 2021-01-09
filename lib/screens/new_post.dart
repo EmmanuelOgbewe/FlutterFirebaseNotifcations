@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:push_notifications_firebase/services/db_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NewPost extends StatefulWidget {
   const NewPost({Key key}) : super(key: key);
@@ -12,6 +13,9 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   String post = ""; 
   final PostService postService = PostService();
+  final String userID = FirebaseAuth.instance.currentUser.uid;
+  final String currentUsername = FirebaseAuth.instance.currentUser.displayName;
+  final String profileImg = FirebaseAuth.instance.currentUser.photoURL;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,7 @@ class _NewPostState extends State<NewPost> {
               ),
               onPressed: () async {
                 // send post to database
-                await postService.newPost(post, "robot64");
+                await postService.newPost(post, currentUsername, userID, profileImg);
                 Navigator.of(context).pop();
               },
             )

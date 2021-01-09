@@ -63,17 +63,17 @@ class MyApp extends StatelessWidget {
                       return MaterialPageRoute(builder : (context){
                         return SignUp();
                       });
-                    case 'home':
-                      return MaterialPageRoute(builder: (context){
-                        return Home(); 
-                      });
+                    case "home":
+                      return MaterialPageRoute(builder : (context){
+                        return Home();
+                    });
                     case "newPost": 
                     return MaterialPageRoute(fullscreenDialog: true, builder: (context){
                       return NewPost();
                     });
                     default:
                       return MaterialPageRoute(builder: (context){
-                        return Container(color: Colors.red);
+                        return Container();
                       });
                   }
                 },
@@ -104,6 +104,7 @@ class _SwitchNavigatorState extends State<SwitchNavigator> {
               print(snapshot.error);
               return Container();
             }
+            print("I got triggered");
               if(snapshot.connectionState == ConnectionState.active){
                   if(snapshot.data == null){
                     return Login();

@@ -18,13 +18,13 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-   final PostService postService = PostService();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final PostService postService = PostService();
+  final String currentUserID = FirebaseAuth.instance.currentUser.uid;
 
-   @override
+ @override
   void initState() {
     super.initState();
-
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: ${message['aps']['alert']['body']}");
@@ -61,12 +61,12 @@ class _Home extends State<Home> {
      _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       // send token to database 
-
+      postService.saveToken(token, currentUserID);
       //subscribe user to topic
       postService.subscribeToTopic("feed");
       print('TOKEN: $token');
     });
-
+  
   }
    
   @override
@@ -77,11 +77,13 @@ class _Home extends State<Home> {
 
 class Posts extends StatelessWidget {
   Posts({Key key}) : super(key: key);
-
-  final PostService postService = PostService();
   static const String routeName = "postsFeed";
-  final globalKey = GlobalKey<ScaffoldState>();
 
+  final globalKey = GlobalKey<ScaffoldState>();
+  final PostService postService = PostService();
+  final String currentUserID = FirebaseAuth.instance.currentUser.uid;
+  final String username = FirebaseAuth.instance.currentUser.displayName;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,13 +99,14 @@ class Posts extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 6,
               width: double.infinity,
               padding: EdgeInsets.only(left: 10, top: 10),
-              child: ListTile(leading: Icon(Icons.logout), title: Text("Logout"), onTap: () async {
+              child: ListTile(leading: Icon(Icons.logout), title: Text('Log out of $username'), onTap: () async {
                 // log user out
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
               }),
             );
           });
+           
         },),
         title: new Text("Home"),
         backgroundColor: Colors.white,
@@ -117,28 +120,63 @@ class Posts extends StatelessWidget {
         },
       ),
       body: Container(
-      padding: EdgeInsets.only(top: 21.0),
-      child: StreamBuilder<List<Post>>(
-        stream: postService.getAllPosts(),
-        builder: (context, snapshot) {
-          if(snapshot.hasError){
+      padding: EdgeInsets.only(top: 0.0),
+      child: Stack(
+        children: [
+            StreamBuilder<List<Post>>(
+            stream: postService.getAllPosts(),
+            builder: (context, snapshot) {
+              if(snapshot.hasError){
 
-            return Container();
-          }
-          if(snapshot.hasData){
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, idx){
-                
-                return PostCard(key: new GlobalKey() ,post: snapshot.data[idx].post, id: snapshot.data[idx].postID, username: snapshot.data[idx].username, liked: snapshot.data[idx].userLikedPost("robot64"));
-              },
-            );
-          }
+                return Container();
+              }
+              if(snapshot.hasData){
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, idx){
+                    
+                    return PostCard(key: new GlobalKey() ,post: snapshot.data[idx].post, id: snapshot.data[idx].postID, username: snapshot.data[idx].username, liked: snapshot.data[idx].userLikedPost(currentUserID), profileImg: snapshot.data[idx].profileImg,);
+                  },
+                );
+              }
 
-          return Container();
-          
-        }
-      ),
+              return Container();
+              
+            }
+          ),
+        ],
+      )
     ));
+  }
+}
+
+class ScrollSheet extends StatelessWidget {
+  const ScrollSheet({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet( 
+      initialChildSize: 0.25 ,
+      minChildSize: 0.20,
+      maxChildSize: 1.0,
+      
+      builder: (context,controller){
+      
+      return Container(
+   
+          child: ListView.builder(
+            controller: controller,
+            itemCount: 25,
+            itemBuilder: (context, index){
+              return ListTile(title: Text('Index $index'));
+          }),
+         decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0))
+        )
+      );
+    });
   }
 }
